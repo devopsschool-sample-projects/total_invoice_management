@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: invoices-svc
+  name: invoices-svc
+  namespace: default
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 3
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      run: invoices-svc
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: invoices-svc
+    spec:
+      containers:
+      - env:
+        - name: EXPECTED_DATE_URI
+          value: http://expected-date-svc.default.svc.cluster.local
+        image: invoices_svc:v1
+        imagePullPolicy: IfNotPresent
+        name: invoices-svc
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
