@@ -102,7 +102,7 @@ metadata:
     service: ambassador
   name: ambassador
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - name: ambassador
     port: 80
